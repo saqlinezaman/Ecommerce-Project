@@ -2,7 +2,10 @@
 <html>
 <head>
 	<title>Admin Panel</title>
+	
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/css/bootstrap.min.css" integrity="sha512-rt/SrQ4UNIaGfDyEXZtNcyWvQeOq0QLygHluFQcSjaGB04IxWhal71tKuzP6K8eYXYB6vJV4pHkXcmFGGQ1/0w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<!--  font-awesome -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
 	<style type="text/css">
 		body
@@ -32,8 +35,9 @@
 
 		.content
 		{
-			margin-left: 260px;
-			padding: 80px 20px 20px;
+			margin-left: 120px ;
+			margin-top: 20px;
+			padding: 30px 2px;
 		}
 
 	</style>

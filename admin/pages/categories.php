@@ -7,21 +7,21 @@ $errorMessage = "";
 $successMessage = "";
 
 // fetch categories from database
-$category_statement = $DB_connection->prepare("SELECT * FROM categories");
+$category_statement = $DB_connection->prepare("SELECT * FROM categories ORDER BY id DESC");
 $category_statement->execute();
 $categories = $category_statement->fetchAll(PDO::FETCH_ASSOC);
 
-if(isset($_POST['submit-btn'])){
+if (isset($_POST['submit-btn'])) {
     $category_name = trim($_POST['category_name']);
-    if(empty($category_name)){
+    if (empty($category_name)) {
         $errorMessage = "Category name is required.";
     } else {
         // insert category into database
         $insert_statement = $DB_connection->prepare("INSERT INTO categories (category_name) VALUES (:category_name)");
         // bind the parameter
         $insert_statement->bindParam(':category_name', $category_name);
-        
-        if($insert_statement->execute()){
+
+        if ($insert_statement->execute()) {
             $successMessage = "Category added successfully.";
         } else {
             $errorMessage = "Failed to add category. Please try again.";
@@ -46,6 +46,7 @@ if(isset($_POST['submit-btn'])){
 
         .content {
             margin-left: 120px;
+            margin-top: 20px;
             padding: 20px;
         }
     </style>
@@ -54,8 +55,8 @@ if(isset($_POST['submit-btn'])){
 <body>
     <div class="content">
         <section class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-10 shadow p-5 bg-white rounded">
+            <div class="row justify-content-center ">
+                <div class="col-md-6 shadow p-5 bg-white rounded" style="height: 300px; margin-right:;">
                     <h3 class="mt-3 text-primary">Add Category</h3>
 
                     <?php if (!empty($errorMessage)): ?>
@@ -75,9 +76,46 @@ if(isset($_POST['submit-btn'])){
                         <button type="submit" name="submit-btn" class="btn btn-success">Add Category</button>
                     </form>
                 </div>
+                <div class="col-md-6">
+                    <h2>All category</h2>
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">name</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <!-- php -->
+                        <?php if ($categories): ?>
+                            <?php foreach ($categories as $category): ?>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row"><?= $category['id'] ?></th>
+                                        <td><?= $category['category_name'] ?></td>
+                                        <td>
+                                            <a href=""><i class="fa-solid fa-pen-to-square text-secondary"></i></a>
+                                            <a href=""><i class="fa-solid fa-trash text-danger"></i></a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="2" class="text-center">No categories found.</td>
+                                </tr>
+                            <?php endif; ?>
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
-        </section>
-    </div>
+</body>
+
+</html>
+</div>
+</div>
+</section>
+</div>
 </body>
 
 </html>

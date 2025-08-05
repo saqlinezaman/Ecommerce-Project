@@ -18,7 +18,7 @@ if (isset($_POST['submit-btn'])) {
     $stock_amount = trim($_POST['stock_amount']);
     $category_id = $_POST['category_id'];
     $product_description = trim($_POST['product_description']);
-    $has_attribute = isset($_POST['has_attribute']) ? 1 : 0;
+    $has_attribute = isset($_POST['has_attributes']) ? 1 : 0;
     $sizes = isset($_POST['sizes']) ? implode(',', $_POST['sizes']) : '';
     $colors = isset($_POST['colors']) ? $_POST['colors'] : '';
 
@@ -59,6 +59,16 @@ if (isset($_POST['submit-btn'])) {
         $statement->bindParam(':has_attribute', $has_attribute);
 
         if ($statement->execute()) {
+           $last_id = $DB_connection->lastInsertId();
+
+            // Insert attributes if they exist
+            if ($has_attribute) {
+                $attribute_statement = $DB_connection->prepare("INSERT INTO attributes (product_id, sizes, colors) VALUES (:product_id, :sizes, :colors)");
+                $attribute_statement->bindParam(':product_id', $last_id);
+                $attribute_statement->bindParam(':sizes', $sizes);
+                $attribute_statement->bindParam(':colors', $colors);
+                $attribute_statement->execute();
+            }
             $successMessage = "Product added successfully.";
         } else {
             $errorMessage = "Failed to add product. Please try again.";
@@ -82,6 +92,7 @@ if (isset($_POST['submit-btn'])) {
 
         .content {
             margin-left: 120px;
+            margin-top: 20px;
             padding: 20px;
         }
     </style>
@@ -181,11 +192,12 @@ if (isset($_POST['submit-btn'])) {
                             </div>
 
                             <div class="form-group">
+                                <div class="d-flex align-items-center gap-2">
                                 <label>Colors:</label>
-                                <input type="color" name="colorPicker" class="color-input">
-                                <button type="button" class="btn btn-sm btn-secondary" onclick="addColor()">Add
-                                    Color</button>
-                                <div id="colorList" class="mt-2"></div>
+                                    <input type="color" name="colorPicker" class="color-input">
+                                <button type="button" class="btn btn-sm btn-secondary" onclick="addColor()">Add Color</button>
+                                </div>
+                                <div id="colorList" class="mt-2" onclick="removeColor()"></div>
                                 <input type="hidden" name="colors" id="colors">
                             </div>
 
@@ -240,6 +252,11 @@ if (isset($_POST['submit-btn'])) {
 
     function updateHiddenColorsInput() {
         document.getElementById('colors').value = selectedColors.join(',');
+    }
+    function removeColor(color) {
+        selectedColors = selectedColors.filter(c => c !== color);
+        updateColorList();
+        updateHiddenColorsInput();
     }
 </script>
 
