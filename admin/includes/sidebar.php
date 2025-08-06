@@ -37,8 +37,9 @@
             <a href="index.php?page=stock_out" style="color: white; text-decoration: none;"> <i
                     class="fa-solid fa-arrow-right mr-2"></i> Stock Out </a>
             <!-- stock by product -->
-            <a href="index.php?page=stockByProducts" style="color: white; text-decoration: none;"><i
-                    class="fa-solid fa-arrow-right mr-2"></i> Stock by Product</a>
+            <a href="index.php?page=stockByProducts" style="color: white; text-decoration: none;"><i class="fa-solid fa-arrow-right mr-2"></i> Stock by Product</a>
+            <!-- report -->
+            <a href="index.php?page=inventory_report" style="color: white; text-decoration: none;"><i class="fa-solid fa-arrow-right mr-2"></i>Report</a>
         </div>
     </div>
 </div>
