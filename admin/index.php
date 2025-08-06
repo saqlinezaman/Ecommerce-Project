@@ -15,7 +15,7 @@ echo '<div class="content">';
 if (file_exists($page_path)) {
     include $page_path;
 } else {
-    echo "<div class='alert alert-warning'>404-Page Not Found!</div>";
+    echo "<div style='margin-left:140px; margin-right:30px; padding:0px 10px; height:50px; display:flex; align-items:center;'  class='content alert alert-info'>404-Page Not Found!</div>";
 }
 
 echo '</div>';

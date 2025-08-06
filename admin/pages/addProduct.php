@@ -1,7 +1,5 @@
 <?php
 include __DIR__ . '/../DBConfig.php';
-include __DIR__ . '/../includes/header.php';
-include __DIR__ . '/../includes/sidebar.php';
 
 $errorMessage = "";
 $successMessage = "";
@@ -70,11 +68,15 @@ if (isset($_POST['submit-btn'])) {
                 $attribute_statement->execute();
             }
             $successMessage = "Product added successfully.";
+            header("Location: ?page=products");
         } else {
             $errorMessage = "Failed to add product. Please try again.";
         }
     }
 }
+include __DIR__ . '/../includes/header.php';
+include __DIR__ . '/../includes/sidebar.php';
+
 ?>
 
 <!DOCTYPE html>
@@ -103,7 +105,10 @@ if (isset($_POST['submit-btn'])) {
         <section class="container">
             <div class="row justify-content-center">
                 <div class="col-md-10 shadow p-5 bg-white rounded">
-                    <h3 class="mt-3 text-primary">Add Product</h3>
+                   <div class="d-flex justify-content-between align-items-center">
+                     <h3 class="mt-3 text-primary">Add Product</h3>
+                     <a href="?page=products" class="btn btn-danger"><i class="fa-solid fa-arrow-right"></i>Back</a>
+                   </div>
                 <!-- error or success massage  -->
                     <?php if (!empty($errorMessage)): ?>
                         <div class="alert alert-danger"><?= htmlspecialchars($errorMessage) ?></div>
@@ -178,6 +183,9 @@ if (isset($_POST['submit-btn'])) {
                         <div id="attributeSection" style="display: none;">
                             <div class="form-group">
                                 <label>Sizes:</label>
+                                <label class="checkbox-inline mr-2">
+                                    <input type="checkbox" name="sizes[]" value="M">M
+                                </label>
                                 <label class="checkbox-inline mr-2">
                                     <input type="checkbox" name="sizes[]" value="L">L
                                 </label>
