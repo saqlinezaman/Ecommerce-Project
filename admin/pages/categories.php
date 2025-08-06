@@ -68,11 +68,15 @@ if (isset($_POST['submit-btn'])) {
 <body>
     <div class="content">
         <section class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 shadow p-5 bg-white rounded" style="height: 350px;">
-                    <h3 class="mt-3 text-primary">Add Category</h3>
+            <div class="row">
+                <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h3 class="">Add Category</h3>
+                    </div>
+                        <div class="card-body">
 
-                    <?php if (!empty($errorMessage)): ?>
+                        <?php if (!empty($errorMessage)): ?>
                         <div class="alert alert-danger"><?= htmlspecialchars($errorMessage) ?></div>
                     <?php endif; ?>
 
@@ -88,14 +92,16 @@ if (isset($_POST['submit-btn'])) {
                         </div>
                         <button type="submit" name="submit-btn" class="btn btn-success">Add Category</button>
                     </form>
-                </div>
 
+                        </div>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <div class="card shadow p-3">
                         <h2>All Categories</h2>
                     <table class="table ">
-                        <thead class="thead-dark">
-                            <tr>
+                        <thead class="table-dark">
+                            <tr >
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Action</th>
@@ -127,9 +133,13 @@ if (isset($_POST['submit-btn'])) {
                     </table>
                     </div>
                 </div>
+                </div>
             </div>
         </section>
     </div>
 </body>
 
 </html>
+<?php
+include __DIR__ . '/../includes/footer.php';
+?>

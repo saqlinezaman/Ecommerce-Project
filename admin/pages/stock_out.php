@@ -14,14 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $remark = $_POST['remark'];
 
     // update new stock amount
-    $update_statement = $DB_connection->prepare("UPDATE products SET stock_amount = stock_amount + ? WHERE id = ?");
+    $update_statement = $DB_connection->prepare("UPDATE products SET stock_amount = stock_amount - ? WHERE id = ?");
     $update_statement->execute([$quantity, $product_id]);
 
     // insert stock in record
-    $insert_statement = $DB_connection->prepare("INSERT INTO inventory (product_id, change_type, quantity, remark) VALUES (?, 'in', ?, ?)");
+    $insert_statement = $DB_connection->prepare("INSERT INTO inventory (product_id, change_type, quantity, remark) VALUES (?, 'out', ?, ?)");
     $insert_statement->execute([$product_id, $quantity, $remark]);
 
-    // ✅ Redirect to prevent resubmission
     header("Location: index.php?page=products&success=1");
     exit;
 }
@@ -33,12 +32,12 @@ include __DIR__ . '/../includes/sidebar.php';
 <div class="content pl-3">
     <div class="col-md-7 mx-auto mt-2">
         <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
-            <div class='alert alert-success'>Stock Added Successfully</div>
+            <div class='alert alert-success'>Stock Reduce Successfully</div>
         <?php endif; ?>
 
         <div class="card">
             <div class="card-header bg-secondary text-white">
-                <h5>Stock In</h5>
+                <h5>Stock Out</h5>
             </div>
             <div class="card-body">
 
@@ -69,7 +68,7 @@ include __DIR__ . '/../includes/sidebar.php';
                     </div>
 
                     <!-- submit button -->
-                    <button type="submit" class="btn btn-success mt-3">Add Stock</button>
+                    <button type="submit" class="btn btn-danger mt-3">Reduce Stock</button>
                 </form>
 
             </div>

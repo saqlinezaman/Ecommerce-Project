@@ -46,7 +46,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>All Products</title>
   <!-- bootstrap cdn -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     .thumbnail-image {
       width: 60px;
@@ -75,8 +75,8 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
       </div>
       <!-- table -->
       <table class="table text-center">
-        <thead class="thead-dark ">
-          <tr>
+        <thead class="rounded">
+          <tr class="table-dark">
             <th scope="col">#</th>
             <th scope="col">Image</th>
             <th scope="col">Name</th>
@@ -104,7 +104,7 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
             $colors = $attribute['colors'] ?? '';
             $colorsArray = explode(',', $colors);
             ?>
-            <tbody>
+            <tbody class="">
               <tr>
                 <th scope="row"><?= $product['id']; ?></th>
                 <td><img class="thumbnail-image" src="uploads/<?= htmlspecialchars($product['product_image']); ?>" alt="" /></td>
@@ -158,3 +158,6 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 </body>
 
 </html>
+<?php
+include __DIR__ . '/../includes/footer.php';
+?>

@@ -103,13 +103,17 @@ include __DIR__ . '/../includes/sidebar.php';
 <body>
     <div class="content">
         <section class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-10 shadow p-5 bg-white rounded">
-                   <div class="d-flex justify-content-between align-items-center">
-                     <h3 class="mt-3 text-primary">Add Product</h3>
-                     <a href="?page=products" class="btn btn-danger"><i class="fa-solid fa-arrow-right"></i>Back</a>
-                   </div>
-                <!-- error or success massage  -->
+            <div class="row">
+                <div class="col-md-10  mx-auto mt-2">
+                    <div class="card">
+                        <div class="card-header mb-3 bg-secondary text-white">
+                             <div class="d-flex justify-content-between align-items-center">
+                                <h3 class="mt-3">Add Product</h3>
+                                <a href="?page=products" class="btn btn-danger"><i class="fa-solid fa-arrow-right"></i>Back</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                             <!-- error or success massage  -->
                     <?php if (!empty($errorMessage)): ?>
                         <div class="alert alert-danger"><?= htmlspecialchars($errorMessage) ?></div>
                     <?php endif; ?>
@@ -214,6 +218,9 @@ include __DIR__ . '/../includes/sidebar.php';
 
                         <button type="submit" name="submit-btn" class="btn btn-success">Add Product</button>
                     </form>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </section>
@@ -271,3 +278,6 @@ include __DIR__ . '/../includes/sidebar.php';
 </body>
 
 </html>
+<?php
+include __DIR__ . '/../includes/footer.php'; 
+?>
