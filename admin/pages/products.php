@@ -38,34 +38,7 @@ $statement = $DB_connection->prepare("SELECT * FROM products ORDER BY id DESC");
 $statement->execute();
 $products = $statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>All Products</title>
-  <!-- bootstrap cdn -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    .thumbnail-image {
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-    }
-
-    .color-box {
-      width: 20px;
-      height: 20px;
-      display: inline-block;
-      margin-right: 5px;
-      border-radius: 50%;
-      border: 1px solid #000;
-    }
-  </style>
-</head>
-
-<body>
   <div class="content">
     <div class="container">
       <!-- header -->
@@ -81,9 +54,9 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
             <th scope="col">Image</th>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
-            <th scope="col">Stock Amount</th>
-            <th scope="col">Product Price</th>
-            <th scope="col">Selling Price</th>
+            <th scope="col">Stock</th>
+            <th scope="col">Price</th>
+            <th scope="col">Sell Price</th>
             <th scope="col">Category</th>
             <th scope="col">Size</th>
             <th scope="col">Colors</th>
@@ -155,9 +128,11 @@ $products = $statement->fetchAll(PDO::FETCH_ASSOC);
       </table>
     </div>
   </div>
-</body>
+  <!-- Make sure Bootstrap JS is loaded properly -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-</html>
+<!-- If you're using jQuery, make sure it's loaded before Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <?php
 include __DIR__ . '/../includes/footer.php';
 ?>

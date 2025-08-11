@@ -78,29 +78,6 @@ include __DIR__ . '/../includes/header.php';
 include __DIR__ . '/../includes/sidebar.php';
 
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8" />
-    <title>Add Product</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-        }
-
-        .content {
-            margin-left: 120px;
-            margin-top: 20px;
-            padding: 20px;
-        }
-    </style>
-</head>
-
-<body>
     <div class="content">
         <section class="container">
             <div class="row">
@@ -225,11 +202,11 @@ include __DIR__ . '/../includes/sidebar.php';
             </div>
         </section>
     </div>
-</body>
+<!-- Make sure Bootstrap JS is loaded properly -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
 
-</html>
-
-
+<!-- If you're using jQuery, make sure it's loaded before Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
     let selectedColors = [];
 

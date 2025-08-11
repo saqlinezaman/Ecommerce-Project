@@ -13,7 +13,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if($statement->rowCount() === 1){
         $admin = $statement->fetch(PDO::FETCH_ASSOC);
         if(password_verify($password, $admin['password'])){
-            $_SESSION['admin_logged_in'] = true;
+            $_SESSION['admin_logged_in'] = $admin['id'] ;
             $_SESSION['admin_username'] = $admin['username'];
             header("location: index.php");
             exit;
