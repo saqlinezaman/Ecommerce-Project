@@ -2,6 +2,10 @@
     style="position: fixed; top: 60px; left: 0; width: 250px; height: calc(100vh - 60px); background-color: #153a4fff; overflow-y: auto;">
     <div class="p-2 pt-3" style="font-weight: 600; display: flex; flex-direction: column; gap: 10px;">
         <!-- dashboard -->
+        <a href="../index.php" style="color: white; text-decoration: none;">
+            <i class="fa-solid fa-eye mr-2"></i> View website
+        </a>
+        <!-- dashboard -->
         <a href="index.php?page=dashboard" style="color: white; text-decoration: none;">
             <i class="fa-solid fa-house-chimney mr-2"></i> Dashboard
         </a>

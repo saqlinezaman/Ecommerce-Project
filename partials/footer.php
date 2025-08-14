@@ -55,34 +55,38 @@
   </div>
 </footer>
 
-<!-- Bootstrap js cdn -->
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Bootstrap Icons -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-<!-- Bootstrap CSS -->
- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- jquery -->
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <!-- fetch product -->
+
+<!-- fetch product + smooth scroll -->
 <script>
 $(document).ready(function(){
-  $('.category-item').click(function(){
-    $('.category-item').removeClass('active bg-dark text-light');
-    $(this).addClass('active bg-dark text-light');
+  $('.category-item').click(function(e){
+    e.preventDefault();
+
+    // Active class toggle
+    $('.category-item').removeClass('active');
+    $(this).addClass('active');
 
     let categoryId = $(this).data('id');
 
+    // Fetch products via Ajax
     $.ajax({
       url: 'fetch_products.php',
       type: 'GET',
       data: {category_id: categoryId},
       success: function(response){
         $('#productContainer').html(response);
+
+        // Smooth scroll to product section
+        $('html, body').animate({
+          scrollTop: $('#productContainer').offset().top - 50
+        }, 500);
       }
     });
   });
 });
 </script>
-
 </body>
 </html>

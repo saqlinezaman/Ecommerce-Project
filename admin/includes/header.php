@@ -144,6 +144,7 @@ if($admin_id) {
 			z-index: 1000;
 		}
 	</style>
+	<link rel="shortcut icon" href="../asset/images/favIcon.jpg" type="image/x-icon">
 </head>
 
 <body>
