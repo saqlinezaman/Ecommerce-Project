@@ -61,6 +61,56 @@ class User{
         return true;
     } 
 
+    public function login ($email, $password){
+        $statement = $this->db->prepare("SELECT * FROM users where email = ? LIMIT 1");
+        $statement->execute([$email]);
+
+        $u = $statement->fetch(PDO::FETCH_ASSOC);
+             if(!$u){
+            throw new Exception("Invalid Credentials");
+        }
+        if(!password_verify($password, $u["password"])){
+           throw new Exception("Invalid Credentials");
+    }
+    if((int)$u['verified'] !== 1){
+         throw new Exception("Your email is not verified please verify your email");
+    }
+    $_SESSION['user_id'] = $u['id'] ;
+    $_SESSION['user_email'] = $u['email'] ;
+    $_SESSION['user_name'] = $u['username'] ;
+    return true;
+}
+
+public function verify ($email, $token) {
+
+    $statement = $this->db->prepare('SELECT id, token, verified FROM users WHERE email = ? LIMIT 1');
+    $statement->execute([$email]);
+    $u = $statement->fetch(PDO::FETCH_ASSOC);
+
+    if(!$u){
+         throw new Exception("Account not found");
+    }
+    if((int)$u['verified'] === 1){
+         return true;
+    }
+    if(!hash_equals($u['token'] ?? '', $token ?? '')){
+        throw new Exception('Invalid Verification token ');
+    }
+    $update = $this->db->prepare('UPDATE users SET verified = 1, token = null WHERE id = ?');
+    $update->execute([$u['id']]);
+    return true;
+}
+public function requestPasswordReset($email){
+
+    $statement = $this->db->prepare('SELECT id, username FROM users WHERE email = ? LIMIT 1');
+    $statement->execute([$email]);
+    $u = $statement->fetch(PDO::FETCH_ASSOC);
+    if(!$u) return true;
+    $token = bin2hex(random_bytes(16));
+
+}
+
+
 }
 
 ?>
