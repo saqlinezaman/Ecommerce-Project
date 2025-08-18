@@ -62,10 +62,14 @@ $username = $_SESSION['user_name'] ?? 'Account';
         </form>
 
         <!-- Register & Login OR Dropdown -->
-        <?php if(!$isLoggedIn): ?>
+        <?php if (!$isLoggedIn): ?>
           <div>
-            <a href="<?= $BASE ?>/register.php" class="btn btn-dark btn-sm me-1">Register</a>
-            <a href="<?= $BASE ?>/login.php" class="btn btn-dark btn-sm">Login</a>
+            <a href="<?= $BASE ?>/register.php" data-bs-target="#registerModal" data-bs-toggle="modal"
+              class="btn btn-dark btn-sm">Register</a>
+            <!-- login -->
+            <a href="<?= $BASE ?>/login.php" data-bs-target="#loginModal" data-bs-toggle="modal"
+              class="btn btn-dark btn-sm">Login</a>
+
           </div>
         <?php else: ?>
           <div class="navbar-nav">
@@ -85,3 +89,91 @@ $username = $_SESSION['user_name'] ?? 'Account';
       </div>
     </div>
   </nav>
+
+  <?php if (!$isLoggedIn): ?>
+
+    <!-- login -->
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Login Marhaba</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <!-- login form -->
+
+            <form method="POST" action="<?= $BASE ?>/auth/login.php">
+              <!-- email -->
+              <div class="mb-3">
+                <label for="username" class="col-form-label">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="Input your email" required
+                  autocomplete="email">
+              </div>
+              <!-- password -->
+              <div class="mb-1">
+                <label for="password" class="col-form-label">Password:</label>
+                <input type="password" class="form-control" id="password" name="password"
+                  placeholder="Input your password" required autocomplete="current-password">
+              </div>
+              <small><a href="<?= $BASE ?>/auth/forget_password.php">Forget Password</a></small>
+              <div class="text-center my-3">
+                <button type="submit" class="btn btn-dark" style="width: 100%;">Login</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- register -->
+
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Create an account in Marhaba</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+
+            <!-- register form -->
+
+            <form method="POST" action="<?= $BASE ?>/auth/register.php">
+              <!-- username -->
+              <div class="mb-1">
+                <label for="username" class="col-form-label">Username:</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Input your username" required autocomplete="username">
+              </div>
+              <!-- email -->
+              <div class="mb-1">
+                <label for="username" class="col-form-label">Email:</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Input your email" required
+                  autocomplete="email">
+              </div>
+              <!-- password -->
+              <div class="mb-1">
+                <label for="password" class="col-form-label">Password:</label>
+                <input type="password" class="form-control" id="password" name="password"
+                  placeholder="Input your password" required autocomplete="new-password" minlength="6">
+              </div>
+              <!-- confirm-password -->
+              <div class="mb-1">
+                <label for="password" class="col-form-label">Confirm password:</label>
+                <input type="password" class="form-control" id="confirm-password" name="confirm-password"
+                  placeholder="Confirm your password" required autocomplete="confirm-password" minlength="6">
+              </div>
+              <small class="mb-1 text-muted">By creating an account, you agree and terms.</small>
+
+              <div class="text-center my-3">
+                <button type="submit" class="btn btn-dark" style="width: 100%;">Register</button>
+              </div>
+            </form>
+            <small><a href="<?= $BASE ?>/auth/login.php">Already have account ?</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>

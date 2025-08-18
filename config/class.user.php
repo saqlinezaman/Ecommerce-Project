@@ -7,13 +7,15 @@ require_once __DIR__ . "/db_config.php";
 
 class User
 {
-    protected $db;
-    protected $baseUrl;
+    private $connection;
+    private $baseUrl;
 
     public function __construct($pdo = null)
     {
-        global $conn;
-        $this->db = $pdo instanceof PDO ? $pdo : (isset($conn) ? $conn : null);
+         $database = new Database();
+         $db = $database->db_connection(); 
+         $this->connection = $db;
+         
         $this->baseUrl = defined("BASE_URL") ? BASE_URL : $this->guessBaseUrl();
     }
 
@@ -27,7 +29,7 @@ class User
     // helper method
     public function redirect($url)
     {
-        header("Location: .$url");
+        header("Location: " . $url);
         exit;
     }
 
@@ -45,16 +47,17 @@ class User
 
     public function get_user_by_id($id)
     {
-        $statement = $this->db->prepare("SELECT id, username, email, verified FROM users WHERE id = ? LIMIT 1");
+        $statement = $this->connection->prepare("SELECT id, username, email, verified FROM users WHERE id = ? LIMIT 1");
         $statement->execute([$id]);
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    // auth core
+    // auth core register
     public function register($username, $email, $password)
     {
-        $statement = $this->db->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        $statement = $this->connection->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
         $statement->execute([$email]);
+        $statement->setFetchMode(PDO::FETCH_ASSOC);
         if ($statement->fetch()) {
             throw new Exception("This email is already registered!");
         }
@@ -62,18 +65,40 @@ class User
         $token = bin2hex(random_bytes(16));
         $hash = password_hash($password, PASSWORD_DEFAULT);
 
-        $insert_query = $this->db->prepare("INSERT INTO users (username, email, password, token, verified) VALUES (?,?,?,?,0)");
+        $insert_query = $this->connection->prepare("INSERT INTO users (username, email, password, token, verified) VALUES (?,?,?,?,0)");
         $insert_query->execute([$username, $email, $hash, $token]);
 
         $verifyLink = $this->baseUrl . "/auth/verify.php?token=" . urlencode($token) . "&email=" . urlencode($email);
-        $this->sendMail($email, "Verify your email", "Click the link to verify: {$verifyLink}");
+
+        $msg = '
+
+        <div style="font-family: Arial; font-size: 14px; line-height: 1.6; color: #333;">
+            <h2 style="margin: 0 0 12px;">Verify your email</h2>
+            <p>Hi ' . htmlspecialchars($username) . ',</p>
+            <p>Please click the button bellow to verify your account:</p>
+            <p style="margin: 16px 0;">
+                <a href="' . htmlspecialchars($verifyLink) . '" target="_blank" style="background: #007bff; color: white; text-decoration: none; padding: 10px 18px; border-radius: 6px; display: inline-block;">
+                   Verify my account
+                </a>
+            </p>
+            <p>If the button does not work, copy and paste this link into your browser:</p>
+            <p>
+                <a href="' . htmlspecialchars($verifyLink) . '" target="_blank">' . htmlspecialchars($verifyLink) . '</a>
+            </p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <p style="font-size: 12px; color: #777;">
+                If you did create this, you can ignore this email.
+            </p>
+        </div>
+        ';
+        $this->sendMail($email, 'Verify your email', $msg);
         return true;
     }
 
     // login
     public function login($email, $password)
     {
-        $statement = $this->db->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
+        $statement = $this->connection->prepare("SELECT * FROM users WHERE email = ? LIMIT 1");
         $statement->execute([$email]);
 
         $u = $statement->fetch(PDO::FETCH_ASSOC);
@@ -96,7 +121,7 @@ class User
     // verify
     public function verify($email, $token)
     {
-        $statement = $this->db->prepare('SELECT id, token, verified FROM users WHERE email = ? LIMIT 1');
+        $statement = $this->connection->prepare('SELECT id, token, verified FROM users WHERE email = ? LIMIT 1');
         $statement->execute([$email]);
         $u = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -110,7 +135,7 @@ class User
             throw new Exception('Invalid Verification token');
         }
 
-        $update = $this->db->prepare('UPDATE users SET verified = 1, token = null WHERE id = ?');
+        $update = $this->connection->prepare('UPDATE users SET verified = 1, token = null WHERE id = ?');
         $update->execute([$u['id']]);
         return true;
     }
@@ -118,7 +143,7 @@ class User
     // request reset
     public function requestPasswordReset($email)
     {
-        $statement = $this->db->prepare('SELECT id, username FROM users WHERE email = ? LIMIT 1');
+        $statement = $this->connection->prepare('SELECT id, username FROM users WHERE email = ? LIMIT 1');
         $statement->execute([$email]);
         $u = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -127,7 +152,7 @@ class User
         $token = bin2hex(random_bytes(16));
         $expire = (new DateTime('+1 hour'))->format('Y-m-d H:i:s');
 
-        $up = $this->db->prepare('UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?');
+        $up = $this->connection->prepare('UPDATE users SET reset_token = ?, reset_expires = ? WHERE id = ?');
         $up->execute([$token, $expire, $u['id']]);
 
         $reset_link = $this->baseUrl . "/auth/reset.php?token=" . urlencode($token) . "&email=" . urlencode($email);
@@ -160,7 +185,7 @@ class User
     // reset password
     public function resetPassword($email, $token, $new_password)
     {
-        $statement = $this->db->prepare("SELECT id, reset_token, reset_expires FROM users WHERE email = ? LIMIT 1");
+        $statement = $this->connection->prepare("SELECT id, reset_token, reset_expires FROM users WHERE email = ? LIMIT 1");
         $statement->execute([$email]);
         $u = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -180,7 +205,7 @@ class User
 
         $hash = password_hash($new_password, PASSWORD_DEFAULT);
 
-        $update = $this->db->prepare("UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?");
+        $update = $this->connection->prepare("UPDATE users SET password = ?, reset_token = NULL, reset_expires = NULL WHERE id = ?");
         $update->execute([$hash, $u['id']]);
 
         return true;
@@ -190,8 +215,8 @@ class User
     private function sendMail($email, $subject, $message)
     {
         require_once __DIR__ .'/mailer/PHPMailer.php';
-        require_once __DIR__ .'/mailer/SMTP.php';
-        
+        require_once __DIR__ .'/mailer/SMTP.php'; 
+
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         //$mail->SMTPDebug = 3;
         $mail->isSMTP();
