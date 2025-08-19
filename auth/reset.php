@@ -45,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <div class="container mt-5" style="max-width: 720px;">
     <div class="card">
-        <div class="card-header bg-dark text-white">
+        <div class="card-header">
             <h3 class="mb-1">Reset password</h3>
             <?php if ($message): ?>
-                <?= $massage ?>
+                <?= $message ?>
                 <?php if (strpos($message, 'successfully') !== false): ?>
 
                     <a href="<?= $BASE ?>/auth/login.php" class="btn btn-dark">Go to login</a>
@@ -81,8 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
                     </form>
-                <?php endif; ?>
-            <?php endif; ?>
+                <?php else: ?>
+                    <div class="alert alert-warning mb-0">Invalid or missing link, please request a new link form the <a href="<?= $base?>/auth/forget_password.php">Forget password</a>
+                 </div>
+                 <?php endif;?>
+                 <?php endif;?>
         </div>
     </div>
 </div>
