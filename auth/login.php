@@ -42,6 +42,7 @@ if($_SERVER["REQUEST_METHOD"] == 'POST') {
                 <button type="submit" class="btn btn-dark" style="width: 100%;">Login</button>
               </div>
       </form>
+      <small class="text-muted">Don't have account ? <a href="<?= $BASE ?>/auth/register.php">Register now</a></small>
 </div>
 
 <?php require_once __DIR__.'/../partials/footer.php';?>

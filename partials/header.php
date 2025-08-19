@@ -78,9 +78,9 @@ $username = $_SESSION['user_name'] ?? 'Account';
                 aria-expanded="false">
                 <i class="bi bi-person-circle"></i> <?= htmlspecialchars($username) ?>
               </a>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accMenu">
-                <li><a class="dropdown-item" href="<?= $BASE ?>/profile.php">Profile</a></li>
-                <li><a class="dropdown-item" href="<?= $BASE ?>/auth/logout.php">Logout</a></li>
+              <ul class="dropdown-menu dropdown-menu-end m-1 p-1" aria-labelledby="accMenu">
+                <li><a class="dropdown-item mb-1" href="<?= $BASE ?>/profile.php">Profile</a></li>
+                <li><a class="dropdown-item bg-danger text-white" href="<?= $BASE ?>/auth/logout.php">Logout</a></li>
               </ul>
             </div>
           </div>
@@ -123,7 +123,7 @@ $username = $_SESSION['user_name'] ?? 'Account';
                 <button type="submit" class="btn btn-dark" style="width: 100%;">Login</button>
               </div>
             </form>
-             <small>Don't have account ? <a href="<?= $BASE ?>/auth/register.php">Register now</a></small>
+             <small class="text-muted">Don't have account ? <a href="<?= $BASE ?>/auth/register.php">Register now</a></small>
           </div>
         </div>
       </div>
@@ -172,7 +172,7 @@ $username = $_SESSION['user_name'] ?? 'Account';
                 <button type="submit" class="btn btn-dark" style="width: 100%;">Register</button>
               </div>
             </form>
-            <small>Already have account ? <a href="<?= $BASE ?>/auth/login.php">Login now</a></small>
+            <small class="text-muted">Already have account ? <a href="<?= $BASE ?>/auth/login.php">Login now</a></small>
           </div>
         </div>
       </div>
