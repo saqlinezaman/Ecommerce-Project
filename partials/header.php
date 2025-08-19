@@ -109,7 +109,7 @@ $username = $_SESSION['user_name'] ?? 'Account';
               <!-- email -->
               <div class="mb-3">
                 <label for="username" class="col-form-label">Email</label>
-                <input type="email" class="form-control" id="email" placeholder="Input your email" required
+                <input type="email" name="email" class="form-control" id="email" placeholder="Input your email" required
                   autocomplete="email">
               </div>
               <!-- password -->
@@ -123,6 +123,7 @@ $username = $_SESSION['user_name'] ?? 'Account';
                 <button type="submit" class="btn btn-dark" style="width: 100%;">Login</button>
               </div>
             </form>
+             <small>Don't have account ? <a href="<?= $BASE ?>/auth/register.php">Register now</a></small>
           </div>
         </div>
       </div>
@@ -171,7 +172,7 @@ $username = $_SESSION['user_name'] ?? 'Account';
                 <button type="submit" class="btn btn-dark" style="width: 100%;">Register</button>
               </div>
             </form>
-            <small><a href="<?= $BASE ?>/auth/login.php">Already have account ?</a></small>
+            <small>Already have account ? <a href="<?= $BASE ?>/auth/login.php">Login now</a></small>
           </div>
         </div>
       </div>

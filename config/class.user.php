@@ -115,7 +115,9 @@ class User
         $_SESSION['user_id'] = $u['id'];
         $_SESSION['user_email'] = $u['email'];
         $_SESSION['user_name'] = $u['username'];
-        return true;
+       
+        header('Location:'.$this->baseUrl.'/');
+        exit;
     }
 
     // verify
