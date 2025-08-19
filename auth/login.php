@@ -26,7 +26,7 @@ if($_SERVER["REQUEST_METHOD"] == 'POST') {
 <div class="container mt-5">
     <h3>Login</h3>
      <?= $message ;?>
-      <form action="POST" class="col-md-5 p-0" >
+      <form method="POST" class="col-md-5 p-0" >
          <!-- email -->
         <div class="form-group mb-2">
             <label for="">Email:</label>

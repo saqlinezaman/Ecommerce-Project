@@ -2,58 +2,61 @@
 
 include __DIR__ . '/../DBConfig.php';
 
-$query = "SELECT i.*, p.product_name FROM inventory i JOIN products P ON i.product_id = p.id ORDER BY i.created_at DESC ";
-
+$query = "SELECT i.*, p.product_name FROM inventory i JOIN products p ON i.product_id = p.id ORDER BY i.created_at DESC";
 $statement = $DB_connection->query($query);
 $logs = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 include __DIR__ . '/../includes/header.php';
 include __DIR__ . '/../includes/sidebar.php';
+
 ?>
-    <div class="content">
+
+<div class="content">
     <div class="row">
-        <div class="col-sm-10 mx-auto mt-3">
+        <div class="col-12 col-md-9 mx-auto mt-3">
             <div class="card">
                 <div class="card-header bg-info text-white">
                     <h3 class="card-title">Inventory report</h3>
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>Date</th>
-                                <th>Product</th>
-                                <th>Change type</th>
-                                <th>Quantity</th>
-                                <th>Remarks</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach($logs as $log):?>
-                            <tr>
-                                <td><?= $log['created_at'] ?></td>
-                                <td><?= htmlspecialchars($log['product_name'])?></td>
-                                <td>
-                                    <?php if($log['change_type'] === 'in'): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Product</th>
+                                    <th>Change type</th>
+                                    <th>Quantity</th>
+                                    <th>Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach($logs as $log): ?>
+                                <tr>
+                                    <td><?= $log['created_at'] ?></td>
+                                    <td><?= htmlspecialchars($log['product_name']) ?></td>
+                                    <td>
+                                        <?php if($log['change_type'] === 'in'): ?>
                                             <span class="badge bg-success">IN</span>
                                         <?php else: ?>
                                             <span class="badge bg-danger">OUT</span>
                                         <?php endif; ?>
-                                </td>
-                                <td><?= $log['quantity'] ?></td>
-                                <td><?= $log['remark'] ?></td>
-                            </tr>
-                            <?php endforeach ;?>
-                           
-                        </tbody>
-                    </table>
+                                    </td>
+                                    <td><?= $log['quantity'] ?></td>
+                                    <td><?= $log['remark'] ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<!-- Make sure Bootstrap JS is loaded properly -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- If you're using jQuery, make sure it's loaded before Bootstrap -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<!-- Prevent horizontal scroll -->
+<style>
+    body {
+        overflow-x: hidden;
+    }
+</style>

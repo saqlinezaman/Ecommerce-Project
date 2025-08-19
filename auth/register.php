@@ -34,7 +34,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div class="container mt-5">
     <h3>Create an account</h3>
     <?= $message ;?>
-    <form action="POST" class="col-md-5 p-0" >
+    <form method="POST" class="col-md-5 p-0" >
         <!-- username -->
         <div class="form-group mb-1">
             <label for="">Username:</label>
