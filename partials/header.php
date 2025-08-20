@@ -52,7 +52,7 @@ $username = $_SESSION['user_name'] ?? 'Account';
           <li class="nav-item"><a class="nav-link active" href="<?= $BASE ?>">Home</a></li>
           <li class="nav-item"><a class="nav-link" href="#">About us</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+          <li class="nav-item"><a class="nav-link" href="<?= $BASE ?>/contact.php">Contact</a></li>
         </ul>
 
         <!-- Search -->
