@@ -13,7 +13,7 @@ try {
 
     $database = new Database();
     $connect = $database->db_connection();
-    $statement = $connect->prepare("INSERT INTO contact_massage (name, email, subject, message) VALUES (?, ?, ?, ?)");
+    $statement = $connect->prepare("INSERT INTO contact_message (name, email, subject, message) VALUES (?, ?, ?, ?)");
     $statement->execute([$name, $email, $subject, $message]);
     header("Location: contact.php?msg=ok");
     exit;
