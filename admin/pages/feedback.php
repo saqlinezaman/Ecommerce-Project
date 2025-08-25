@@ -38,7 +38,7 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
                             <div class="">
                                 <strong><?= htmlspecialchars($row['name']) ?>
                                 <?php if((int)$row['is_registered'] === 0): ?>
-                            <small>(Not registered)</small></strong>
+                            <small><i class="fa-solid fa-user-xmark text-danger" title="Not registered"></i></small></strong>
                             <?php endif;?>
 
                             </div>
@@ -63,7 +63,7 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
                                 <!-- reply box -->
                                 <div class="replyBox mt-2 text-start d-none" id="replyBox-<?= $row['id']; ?>">
-                                    <textarea id="rt-<?= $row['id']; ?>" class="form-control mb-2" cols="3"
+                                    <textarea id="rt-<?= $row['id']; ?>" name="reply" class="form-control mb-2" cols="3"
                                         placeholder="Input your reply..."></textarea>
 
                                     <button class="btn btn-success sendReply" data-id="<?= $row['id']; ?>">Send</button>
@@ -103,8 +103,6 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
         $(document).on('click', '.sendReply', function () {
             var id = $(this).data('id');
-            // ❌ তোমার কোডে ছিল $('rt-'+id).val()
-            // ✅ ঠিক করা হলো $('#rt-'+id).val()
             var txt = ($('#rt-' + id).val() || '').trim();
 
             if (!txt) {
@@ -112,21 +110,32 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
                 return;
             }
 
+            // Show loading state
+            var btn = $(this);
+            btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...').prop('disabled', true);
+            
+            // AJAX request
             $.ajax({
                 url: 'ajax/send_reply.php',
                 method: 'POST',
-                dataType: 'json',
-                data: { id: id, reply: txt }
-            }).done(function (d) {
-                if (d && d.ok) {
-                    alert('Reply sent');
+                data: {
+                    id: id,
+                    reply: txt
+                }
+            })
+            .done(function(response) {
+                if (response.ok) {
+                    alert('Reply Sent!');
                     location.reload();
                 } else {
-                    alert((d && d.err ? d.err : 'Failed to send reply.'));
+                    alert('Error: ' + (response.err || 'Failed to send'));
                 }
-            }).fail(function (xhr) {
-                alert(xhr.responseText || 'Unexpected error');
-                console.error('Send reply failed', xhr.status, xhr.responseText);
+            })
+            .fail(function() {
+                alert('Network error. Please try again.');
+            })
+            .always(function() {
+                btn.html('Send').prop('disabled', false);
             });
         });
     });
