@@ -50,10 +50,27 @@
         <!-- Feedback -->
         <a href="index.php?page=feedback" class="position-relative" style="color: white; text-decoration: none;">
             <i class="fa-regular fa-comment-dots me-1"></i>Feedback
-            <span class="position-absolute badge rounded-pill bg-danger mx-1">
+            <span id="feedbackCount" class="position-absolute badge rounded-pill bg-danger mx-1">
                 0
                 <span class="visually-hidden">unread messages</span>
             </span>
         </a>
     </div>
 </div>
+<!-- jquery cdn -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+ <script>
+    (function pollFeedback(params) {
+        $.ajax({
+            url: 'ajax/feedback_count.php',
+            method: 'get',
+            dataType: 'json'
+
+        }).done(function (d) {
+            $('#feedbackCount').text((d && d.count) ? d.count : 0);
+        }).always(function () {
+            setTimeout(pollFeedback,2000);
+        });
+    })();
+ </script>

@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../../config/db_config.php";
 $database = new Database();
 $connect = $database->db_connection();
+$connect->exec("UPDATE contact_message SET is_read = 1 WHERE is_read = 0");
 
 $sql = "SELECT cm.*, 
     CASE WHEN u.id IS NULL THEN 0 ELSE 1 END AS is_registered 
@@ -80,7 +81,7 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
                                 if (!empty($row['replied_text'])): ?>
                                     <details class="mt-1">
                                         <summary>View reply</summary>
-                                        <div class="small" style="white-space:pre-wrap;">
+                                        <div class="small" style="">
                                             <?= nl2br(htmlspecialchars($row['replied_text'])); ?>
                                         </div>
                                     </details>
