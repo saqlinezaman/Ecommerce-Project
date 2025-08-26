@@ -16,11 +16,23 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="content ">
     <div class="table-responsive col-md-12 mx-auto">
-        <h3>Users feedback</h3>
-        <span class="badge badge-info">Total: <?= count($rows) ?></span>
-        <table class="table text-center">
+        <div class="d-flex justify-content-between items-center px-3">
+            <div class="">
+                <h3>Users feedback</h3>
+                <span class="badge text-bg-info mb-2">Total: <?= count($rows) ?></span>
+            </div>
+            <div class="">
+                <button id="select_delete" class="btn btn-danger btn-sm">Delete</button>
+            </div>
+        </div>
+
+        <table class="table text-center" id="feedback_table">
             <thead class="table-dark">
-                <tr>
+                <tr >
+                    <th style="width: 40px; text-align: start;" >
+                        Select
+                        <input type="checkbox" name="selectAll" id="selectAll">
+                    </th>
                     <th scope="col">#</th>
                     <th scope="col">Name</th>
                     <th scope="col">Subject</th>
@@ -33,14 +45,18 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
             <tbody>
                 <?php foreach ($rows as $r => $row): ?>
-                    <tr>
+                    <tr data-id="<?= (int)$row["id"] ?>">
+                        <td style="text-align: start;">
+                            <input type="checkbox" name="delete_single" id="delete_single" value="<?= (int)$row["id"] ?>">
+                        </td>
                         <td><?= $r + 1 ?></td>
                         <td>
                             <div class="">
                                 <strong><?= htmlspecialchars($row['name']) ?>
-                                <?php if((int)$row['is_registered'] === 0): ?>
-                            <small><i class="fa-solid fa-user-xmark text-danger" title="Not registered"></i></small></strong>
-                            <?php endif;?>
+                                    <?php if ((int) $row['is_registered'] === 0): ?>
+                                        <small><i class="fa-solid fa-user-xmark text-danger"
+                                                title="Not registered"></i></small></strong>
+                                <?php endif; ?>
 
                             </div>
                             <?= htmlspecialchars($row['email']) ?>
@@ -114,7 +130,7 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
             // Show loading state
             var btn = $(this);
             btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...').prop('disabled', true);
-            
+
             // AJAX request
             $.ajax({
                 url: 'ajax/send_reply.php',
@@ -124,20 +140,20 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
                     reply: txt
                 }
             })
-            .done(function(response) {
-                if (response.ok) {
-                    alert('Reply Sent!');
-                    location.reload();
-                } else {
-                    alert('Error: ' + (response.err || 'Failed to send'));
-                }
-            })
-            .fail(function() {
-                alert('Network error. Please try again.');
-            })
-            .always(function() {
-                btn.html('Send').prop('disabled', false);
-            });
+                .done(function (response) {
+                    if (response.ok) {
+                        alert('Reply Sent!');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + (response.err || 'Failed to send'));
+                    }
+                })
+                .fail(function () {
+                    alert('Network error. Please try again.');
+                })
+                .always(function () {
+                    btn.html('Send').prop('disabled', false);
+                });
         });
     });
 </script>
