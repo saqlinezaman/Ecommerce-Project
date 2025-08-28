@@ -18,6 +18,7 @@ if(empty($_SESSION['admin_logged_in']))
 
 	$row = $conn->query("SELECT COUNT(*) AS c FROM contact_message WHERE is_read = 0")->fetch(PDO::FETCH_ASSOC);
 
+
 	echo json_encode(['count' => (int)($row['c'] ?? 0 )]);
 
 

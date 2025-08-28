@@ -2,11 +2,11 @@
 include 'admin/DBConfig.php';
 include("partials/header.php");
 
-// প্রথমে সব প্রোডাক্ট লোড হবে
 $product_statement = $DB_connection->prepare("SELECT * FROM products ORDER BY id DESC");
 $product_statement->execute();
 $products = $product_statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <main class="container-fluid my-4">
   <div class="row">

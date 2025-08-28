@@ -47,7 +47,7 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
                 <?php foreach ($rows as $r => $row): ?>
                     <tr data-id="<?= (int)$row["id"] ?>">
                         <td style="text-align: start;">
-                            <input type="checkbox" name="delete_single" id="delete_single" value="<?= (int)$row["id"] ?>">
+                            <input type="checkbox" name="delete_single" class="delete_single" value="<?= (int)$row["id"] ?>">
                         </td>
                         <td><?= $r + 1 ?></td>
                         <td>
@@ -112,6 +112,7 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <script>
+    // reply
     $(function () {
         $(document).on('click', '.replyBtn', function () {
             var id = $(this).data('id');
@@ -127,33 +128,93 @@ $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
                 return;
             }
 
-            // Show loading state
             var btn = $(this);
             btn.html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...').prop('disabled', true);
 
-            // AJAX request
             $.ajax({
                 url: 'ajax/send_reply.php',
                 method: 'POST',
-                data: {
-                    id: id,
-                    reply: txt
+                data: { id: id, reply: txt }
+            })
+            .done(function (response) {
+                if (response.ok) {
+                    alert('Reply Sent!');
+                    location.reload();
+                } else {
+                    alert('Error: ' + (response.err || 'Failed to send'));
                 }
             })
-                .done(function (response) {
-                    if (response.ok) {
-                        alert('Reply Sent!');
-                        location.reload();
-                    } else {
-                        alert('Error: ' + (response.err || 'Failed to send'));
-                    }
-                })
-                .fail(function () {
-                    alert('Network error. Please try again.');
-                })
-                .always(function () {
-                    btn.html('Send').prop('disabled', false);
-                });
+            .fail(function () {
+                alert('Network error. Please try again.');
+            })
+            .always(function () {
+                btn.html('Send').prop('disabled', false);
+            });
         });
-    });
+        });
+        // Select all + delete system
+        (function () {
+            var selectAll = document.getElementById('selectAll');
+            var table = document.getElementById('feedback_table');
+            var deleteBtn = document.getElementById('select_delete');
+
+            // default hide delete button
+            if (deleteBtn) deleteBtn.style.display = "none";
+
+            function updateDeleteBtnState() {
+                var sel = table.querySelectorAll('tbody .delete_single:checked').length >0;
+                if (deleteBtn) {
+                    deleteBtn.style.display = (sel > 0) ? "inline-block" : "none";
+                }
+            }
+
+            if (selectAll) {
+                selectAll.addEventListener('change', function () {
+                    var rows = table.querySelectorAll('tbody .delete_single');
+                    rows.forEach(function (chk) {
+                        chk.checked = selectAll.checked;
+                    });
+                    updateDeleteBtnState();
+                });
+            }
+
+            table.addEventListener('change', function (e) {
+                if (e.target.classList.contains('delete_single')) {
+                    var all = table.querySelectorAll('tbody .delete_single').length;
+                    var sel = table.querySelectorAll('tbody .delete_single:checked').length;
+
+                    if (selectAll) {
+                        selectAll.checked = (all > 0 && sel === all);
+                    }
+                    updateDeleteBtnState();
+                }
+            });
+
+          deleteBtn.addEventListener('click', function() {
+    var ids = Array.from(table.querySelectorAll('tbody .delete_single:checked')).map(chk => chk.value);
+
+    if(ids.length === 0) return;
+
+    if(!confirm('Delete ' + ids.length + ' message(s)? This action cannot be undone.')) return;
+
+    fetch('ajax/delete_feedback.php', {
+        method: "POST",
+        headers: {'Content-Type': 'application/json'}, // fix typo
+        credentials: 'same-origin',
+        body: JSON.stringify({ids: ids})
+    })
+    .then(r => r.json())
+    .then(d => {
+        if(d.ok){
+            alert('Deleted: '+d.deleted+' message(s).');
+            location.reload();
+        } else {
+            alert(d.error || 'Delete failed');
+        }
+    })
+    .catch(() => alert('Unexpected error'));
+});
+
+        })();
+    
 </script>
