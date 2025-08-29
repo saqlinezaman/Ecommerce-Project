@@ -85,6 +85,8 @@ $username = $_SESSION['user_name'] ?? 'Account';
             </div>
           </div>
         <?php endif; ?>
+        <!-- cart -->
+       <a class="mx-2 text-black" style="font-size:20px;" href=""><i class="fa-solid fa-cart-shopping"></i></a>
 
       </div>
     </div>

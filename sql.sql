@@ -13,3 +13,21 @@ CREATE TABLE IF NOT EXISTS contact_message(
 
 CREATE INDEX idx_contact_email ON contact_message(email);
 CREATE INDEX idx_contact_is_replied ON contact_message(is_replied);
+
+CREATE TABLE carts(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    status ENUM('open','ordered') DEFAULT 'open',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE cart_items(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL NOT NULL DEFAULT 0.00,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_cart_product (cart_id,product_id)
+);

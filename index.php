@@ -1,12 +1,9 @@
 <?php
+if (session_status() == PHP_SESSION_NONE) session_start();
+
 include 'admin/DBConfig.php';
 include("partials/header.php");
-
-$product_statement = $DB_connection->prepare("SELECT * FROM products ORDER BY id DESC");
-$product_statement->execute();
-$products = $product_statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 
 <main class="container-fluid my-4">
   <div class="row">
@@ -42,25 +39,10 @@ $products = $product_statement->fetchAll(PDO::FETCH_ASSOC);
       </div>
 
       <!-- Products -->
-      <h3  class="my-5">All Products</h3>
-      <div class="row row-cols-1 row-cols-md-3 g-4" id="productContainer">
-  <?php foreach ($products as $product): ?>
-    <div class="col">
-      <div class="card h-100">
-        <div class="overflow-hidden" style="height: 250px;">
-          <img src="admin/uploads/<?= htmlspecialchars($product['product_image']); ?>" class="w-100 h-100"
-            alt="<?= htmlspecialchars($product['product_name']); ?>" style="object-fit: cover;">
-        </div>
-        <div class="card-body">
-          <h6 class="card-title"><?= htmlspecialchars($product['product_name']); ?></h6>
-          <p>$<?= htmlspecialchars($product['product_price']); ?></p>
-          <a href="#" class="btn btn-dark btn-sm">Add to Cart</a>
-        </div>
+      <h3 class="my-5">All Products</h3>
+      <div id="productContainer">
+        <?php include("fetch_products.php"); ?>
       </div>
-    </div>
-  <?php endforeach; ?>
-</div>
-
 
     </div>
   </div>
