@@ -6,6 +6,37 @@ $BASE = defined('BASE_URL') ? BASE_URL : ((isset($_SERVER['HTTPS']) && $_SERVER[
 
 $isLoggedIn = !empty($_SESSION['user_id']);
 $username = $_SESSION['user_name'] ?? 'Account';
+
+// cart count
+$cartCount = 0;
+try {
+
+  require_once __DIR__ . '/../admin/DBConfig.php';
+
+  if ($isLoggedIn && isset($DB_connection)) {
+    $user_id = (int) $_SESSION['user_id'];
+    $statement = $DB_connection->prepare('SELECT id FROM carts WHERE user_id = ? AND  status="open" LIMIT 1');
+    $statement->execute([$user_id]);
+    $cart_id = $statement->fetch(PDO::FETCH_ASSOC)['id'] ?? null;
+
+    if ($cart_id) {
+      $statement = $DB_connection->prepare('SELECT COALESCE(SUM(quantity),0) AS c FROM cart_items WHERE cart_id = ?');
+      $statement->execute([$cart_id]);
+
+      $cartCount = (int) $statement->fetch(PDO::FETCH_ASSOC)['c'] ?? 0;
+
+    }
+  } else {
+    if (!empty($_SESSION['cart']) && is_array($_SESSION['cart'])) {
+
+      foreach ($_SESSION['cart'] as $q) {
+        $cartCount += (int) $q;
+      }
+    }
+  }
+} catch (Throwable $e) {
+
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -81,14 +112,23 @@ $username = $_SESSION['user_name'] ?? 'Account';
               <ul class="dropdown-menu dropdown-menu-end m-1 p-1" aria-labelledby="accMenu">
                 <li><a class="dropdown-item mb-1" href="<?= $BASE ?>/profile.php">Profile</a></li>
                 <li><a class="dropdown-item bg-danger text-white" href="<?= $BASE ?>/auth/logout.php">Logout</a></li>
+
               </ul>
+
             </div>
+
           </div>
         <?php endif; ?>
-        <!-- cart -->
-       <a class="mx-2 text-black" style="font-size:20px;" href=""><i class="fa-solid fa-cart-shopping"></i></a>
 
       </div>
+      <!-- cart btn -->
+      <a class="mx-2 text-black position-relative" style="font-size:20px;" href="<?= $BASE ?>/cart.php">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span id="navCardCount" class="badge text-bg-danger rounded-pill" style="position: absolute; top: 2px; right: 0%; transform: translate(50%,-50%);
+               font-size: 12px; min-width: 18px; padding: 3px 6px;">
+          <?= $cartCount; ?>
+        </span>
+      </a>
     </div>
   </nav>
 
@@ -125,7 +165,8 @@ $username = $_SESSION['user_name'] ?? 'Account';
                 <button type="submit" class="btn btn-dark" style="width: 100%;">Login</button>
               </div>
             </form>
-             <small class="text-muted">Don't have account ? <a href="<?= $BASE ?>/auth/register.php">Register now</a></small>
+            <small class="text-muted">Don't have account ? <a href="<?= $BASE ?>/auth/register.php">Register
+                now</a></small>
           </div>
         </div>
       </div>
@@ -148,7 +189,8 @@ $username = $_SESSION['user_name'] ?? 'Account';
               <!-- username -->
               <div class="mb-1">
                 <label for="username" class="col-form-label">Username:</label>
-                <input type="text" class="form-control" name="username" id="username" placeholder="Input your username" required autocomplete="username">
+                <input type="text" class="form-control" name="username" id="username" placeholder="Input your username"
+                  required autocomplete="username">
               </div>
               <!-- email -->
               <div class="mb-1">
@@ -180,3 +222,12 @@ $username = $_SESSION['user_name'] ?? 'Account';
       </div>
     </div>
   <?php endif; ?>
+
+  <script>
+    window.updateNavCartBadge =function(totalQty){
+      var badge = document.getElementById('navCardCount');
+
+      if(!badge) return;
+      badge.textContent = (parseInt(totalQty,10) || 0);
+    }
+  </script>
