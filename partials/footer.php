@@ -5,7 +5,7 @@
       <!-- Logo & About -->
       <div class="col-md-4 mb-4">
         <h5 class="mb-3">Marhaba eCommerce</h5>
-        <p>আপনার পছন্দের সব পণ্য এক জায়গায়। মান, দাম এবং দ্রুত ডেলিভারির নিশ্চয়তা দিচ্ছি।</p>
+        <p>All your favorite products in one place. We guarantee quality, price, and fast delivery.</p>
       </div>
 
       <!-- Quick Links -->
@@ -88,6 +88,33 @@ $(document).ready(function(){
   });
 });
 </script>
+<script>
+  document.addEventListener('click', function(e) {
+    var btn = e.target.closest('.login-cart-btn');
+    if (!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    var card = btn.closest('.product-card') || btn.closest('.card') || document;
+    var old = card.querySelector('.login_select_inline');
+    if (old) old.remove();
+
+    var div = document.createElement('div');
+    div.className = 'alert alert-dark text-danger alert-dismissible fade show login_select_inline';
+    div.setAttribute('role','alert');
+    div.style.margin = '8px';
+    div.innerHTML = 
+      "Please login first to add items in your cart. " +
+      "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+
+    if (card.firstChild) {
+      card.insertBefore(div, card.firstChild);
+    } else {
+      card.appendChild(div);
+    }
+  }, true);
+</script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css" integrity="sha512-DxV+EoADOkOygM4IR9yXP8Sb2qwgidEmeqAEmDKIOfPRQZOWbXCzLC6vjbZyy0vPisbH2SyW27+ddLVCN+OMzQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </body>
 </html>

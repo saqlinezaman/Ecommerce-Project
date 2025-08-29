@@ -19,7 +19,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="row row-cols-1 row-cols-md-3 g-4">
 <?php foreach ($products as $product): ?>
   <div class="col">
-    <div class="card h-100">
+    <div class="card h-100 product-card">
       <div class="overflow-hidden" style="height: 250px;">
         <img src="admin/uploads/<?= htmlspecialchars($product['product_image']); ?>" 
              class="w-100 h-100"
@@ -39,7 +39,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button type="submit" class="btn btn-dark btn-sm">Add to Cart</button>
           </form>
         <?php else: ?>
-          <button class="btn btn-info text-white btn-sm">Login to add to cart</button>
+          <button class="btn btn-info text-white btn-sm login-cart-btn">Login to add to cart</button>
         <?php endif; ?>
 
         <a href="product_details.php?id=<?= $product['id']; ?>" class="btn btn-outline-success btn-sm">View</a>
