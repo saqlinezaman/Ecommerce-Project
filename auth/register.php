@@ -9,25 +9,29 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     
     try{
 
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirm_password = $_POST['confirm-password'];
+        $username = isset($_POST['username']) ? $_POST['username'] : '';
+        $email = isset($_POST['email']) ? $_POST['email'] : '';
+        $password = isset($_POST['password']) ? $_POST['password'] : '';
+        $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
 
-        if($password != $confirm_password) {
+        if(empty($password) || empty($confirm_password)){
+            throw new Exception('Password fields cannot be empty');
+        }
+
+        if($password !== $confirm_password) {
             throw new Exception('Password does not match');
         }
-        $user->register($username, $email, password: $password);
-        $message = '<div class="alert alert-success">Registration successfully done, Please check your email to verify</div>';
 
+        $user->register($username, $email, $password);
+
+        $message = '<div class="alert alert-success">Registration successfully done, Please check your email to verify</div>';
 
     }catch(Exception $e){
         $message = '<div class="alert alert-danger">'.htmlspecialchars($e->getMessage()).'</div>';
     }
-    
 }
-
 ?>
+
 
 <?php require_once __DIR__.'/../partials/header.php';?>
 
