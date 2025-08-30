@@ -63,6 +63,28 @@ try {
     .category-item.active {
       background-color: black !important;
     }
+   /* Control button গুলো মোটা কালো গোল */
+#clothCarousel .carousel-control-prev-icon,
+#clothCarousel .carousel-control-next-icon {
+  background-color: black;   /* কালো রঙ */
+  border-radius: 50%;        /* গোল বাটন */
+  width: 40px;
+  height: 40px;
+  background-size: 60%, 60%;
+}
+
+/* Control container এর ভেতর রাখবো */
+#clothCarousel .carousel-control-prev,
+#clothCarousel .carousel-control-next {
+  width: 8%;          /* সাইজ fix */
+  opacity: 0.8;       /* হালকা ট্রান্সপারেন্সি */
+}
+
+/* Hover করলে আরো স্পষ্ট */
+#clothCarousel .carousel-control-prev:hover,
+#clothCarousel .carousel-control-next:hover {
+  opacity: 1;
+}
   </style>
 </head>
 

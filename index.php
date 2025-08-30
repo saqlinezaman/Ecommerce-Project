@@ -3,6 +3,10 @@ if (session_status() == PHP_SESSION_NONE) session_start();
 
 include 'admin/DBConfig.php';
 include("partials/header.php");
+
+$cloth_statement = $DB_connection->prepare("SELECT * FROM products WHERE category_id = 34 ORDER BY id DESC");
+$cloth_statement->execute();
+$cloths = $cloth_statement->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <main class="container-fluid my-4">
@@ -59,6 +63,82 @@ include("partials/header.php");
       <div id="productContainer">
         <?php include("fetch_products.php"); ?>
       </div>
+
+    <!-- cloth section -->
+   <h3 class="mt-5 mb-5">Cloths For you</h3>
+
+<div id="clothCarousel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+
+    <?php 
+    // প্রতি slide এ 3টা product
+    $chunked_cloths = array_chunk($cloths, 3); 
+    $active = true;
+    foreach ($chunked_cloths as $group): 
+    ?>
+      <div class="carousel-item <?php echo $active ? 'active' : ''; ?>">
+        <div class="">
+          <div class="row justify-content-center">
+            <?php foreach ($group as $cloth): ?>
+              <div class="col-md-4">
+                <div class="card mb-3 shadow-sm">
+                  <img src="admin/uploads/<?php echo $cloth['product_image']; ?>" 
+                       class="card-img-top" 
+                       style="height: 300px; object-fit: cover;" 
+                       alt="<?php echo $cloth['product_name']; ?>">
+
+                  <div class="card-body text-center">
+                    <h6 class="card-title"><?php echo $cloth['product_name']; ?></h6>
+                    <p class="card-text"><?php echo $cloth['product_price']; ?> ৳</p>
+
+                    <div class="d-flex gap-2 justify-content-center">
+                      <?php if (!empty($_SESSION['user_id'])): ?>
+                        <form action="cart_add.php" method="POST" class="m-0">
+                          <input type="hidden" name="product_id" value="<?= $cloth['id']; ?>">
+                          <input type="hidden" name="qty" value="1">
+                          <button type="submit" class="btn btn-dark btn-sm">
+                            <i class="bi bi-cart-plus"></i> Add to Cart
+                          </button>
+                        </form>
+                      <?php else: ?>
+                        <button class="btn btn-info text-white btn-sm login-cart-btn">
+                          Login to add to cart
+                        </button>
+                      <?php endif; ?>
+
+                      <!-- View Button - Modal Trigger -->
+                      <button type="button" 
+                              class="btn btn-outline-success btn-sm" 
+                              data-bs-toggle="modal" 
+                              data-bs-target="#productModal<?= $cloth['id']; ?>">
+                        View
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      </div>
+    <?php 
+      $active = false;
+    endforeach; 
+    ?>
+  </div>
+
+  <!-- Controls -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#clothCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#clothCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+
+
+
 
     </div>
   </div>

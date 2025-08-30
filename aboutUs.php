@@ -2,12 +2,7 @@
 
 <div class="container-fluid p-0">
   <!-- Banner -->
-  <div style="
-        background-image: url('asset/images/shop-banner.jpg');
-        background-size: cover;
-        background-position: center;
-        height: 250px;" 
-        class="d-flex align-items-center justify-content-center">
+  <div style=" height: 250px;" class="d-flex align-items-center justify-content-center bg-dark">
     <h1 class="text-white fw-bold bg-dark bg-opacity-50 px-4 py-2 rounded">About Us</h1>
   </div>
 </div>
@@ -15,8 +10,8 @@
 <div class="container my-5">
   <div class="row g-4 align-items-center">
     <!-- Left Image -->
-    <div class="col-md-6">
-      <img src="asset/images/about-us.jpg" class="img-fluid rounded shadow-sm" alt="About Marhaba Ecommerce">
+    <div class="col-md-6 p-3">
+      <img src="asset/images/about.jpg" class="img-fluid rounded shadow-sm" alt="About Marhaba Ecommerce">
     </div>
 
     <!-- Right Content -->
