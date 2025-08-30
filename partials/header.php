@@ -69,7 +69,7 @@ try {
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm mx-1">
     <div class="container-fluid">
       <a class="navbar-brand fw-bold" href="#">Marhaba</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
@@ -81,8 +81,8 @@ try {
         <!-- Left Menu -->
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item"><a class="nav-link active" href="<?= $BASE ?>">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">About us</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Shop</a></li>
+          <li class="nav-item"><a class="nav-link" href="<?= $BASE ?>/aboutUs.php"">About us</a></li>
+          <li class="nav-item"><a class="nav-link" href="<?= $BASE ?>/shop.php">Shop</a></li>
           <li class="nav-item"><a class="nav-link" href="<?= $BASE ?>/contact.php">Contact</a></li>
         </ul>
 
@@ -118,14 +118,14 @@ try {
 
       </div>
       <!-- cart btn -->
-      <a class="mx-2 text-black position-relative" style="font-size:20px;" href="<?= $BASE ?>/cart.php">
-        <i class="fa-solid fa-cart-shopping"></i>
+    </div>
+     <a class="mx-2 text-black position-relative" style="font-size:20px;" href="<?= $BASE ?>/cart.php">
+        <i class="fa-solid fa-cart-shopping text-dark"></i>
         <span id="navCardCount" class="badge text-bg-danger rounded-pill" style="position: absolute; top: 2px; right: 0%; transform: translate(50%,-50%);
                font-size: 12px; min-width: 18px; padding: 3px 6px;">
           <?= $cartCount; ?>
         </span>
       </a>
-    </div>
   </nav>
 
   <?php if (!$isLoggedIn): ?>

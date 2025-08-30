@@ -8,9 +8,9 @@ include("partials/header.php");
 <main class="container-fluid my-4">
   <!-- Search -->
        <div class="container-fluid px-4 py-3 mb-3 rounded-1 shadow-sm">
-    <form class="d-flex align-items-center justify-content-center">
-        <div class="input-group " style="max-width: 500px; border: 1px solid black; ">
-            <span class="input-group-text bg-light border-0 text-secondary">
+    <form class="d-flex align-items-center justify-content-center ">
+        <div class="input-group rounded" style="max-width: 500px; border: 1px solid black; ">
+            <span class="input-group-text bg-dark border-0 text-light">
                 <i class="fas fa-search"></i>
             </span>
             <input class="form-control bg-light border-0 text-dark "  
