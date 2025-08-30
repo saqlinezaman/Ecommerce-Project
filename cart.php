@@ -64,11 +64,11 @@ if (file_exists(__DIR__ . '/partials/header.php'))
 <body>
     <div class="container my-3">
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <div class="card border-none">
                     <div
                         class="card-header bg-dark  bg-opacity-70 text-white d-flex justify-content-between align-items-center mb-4 ">
-                        <h1>Your cart</h1>
+                        <h2>Your cart</h2>
                         <a href="<?= htmlspecialchars($BASE) ?>/index.php"
                             class="btn btn-sm btn-light fw-semibold">Continue Shopping</a>
                     </div>
@@ -79,7 +79,7 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                             <h5 class="">Your Cart is empty</h5>
                             <p class="text-muted"> Add some products to see them here</p>
                             <a href="<?= htmlspecialchars($BASE) ?>/index.php?>"
-                                class="btn btn-info text-white fw-medium">Browse Product</a>
+                                class="btn btn-success text-white fw-medium">Browse Product</a>
                         </div>
                     <?php else: ?>
 
@@ -96,21 +96,80 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                                     </tr>
                                 </thead>
                                 <tbody class="cart-body">
-                                    <?php foreach($items as $item):
-                                        
-                                        $img = (!empty($item['product_image']) && file_exists(__DIR__. "/admin/uploads".$item['product_image'])) ? 'admin/uploads/'.$item['product_image'] : 'assets/images/default.jpg';
+                                    <?php foreach ($items as $item):
 
-                                        $line = $line = (float)$item['unit_price'] * (int)$item['quantity'];
+                                        $img = (!empty($item['product_image']) && file_exists(__DIR__ . "/admin/uploads" . $item['product_image'])) ? 'admin/uploads/' . $item['product_image'] : 'assets/images/default.jpg';
+
+                                        $line = $line = (float) $item['unit_price'] * (int) $item['quantity'];
                                         ?>
-                                        <tr>
-                                            <td></td>
+                                        <tr class="" data-item-id="<?= (int) $item['id'] ?>">
+                                            <td>
+                                                <img src="<?= htmlspecialchars($img) ?>" alt="" class="">
+                                            </td>
+                                            <td>
+                                                <div class="fw-medium">
+                                                    <?= htmlspecialchars($item['product_name']) ?>
+                                                </div>
+                                            </td>
+                                            <td class="text-right">
+                                                $ <span><?= number_format($item['unit_price'], 2) ?></span>
+                                            </td>
+                                            <td>
+                                                <input type="number" name="quantity" class="form-control-sm qty" min="1"
+                                                    value="<?= htmlspecialchars($item['quantity']) ?>">
+                                            </td>
+                                            <td class="text-right">
+                                                <span><?= number_format($line, 2) ?><?= number_format($line, 2) ?></span>
+                                            </td>
+                                            <td>
+                                                <button class=""><i class="fa-solid fa-trash text-danger"></i></button>
+                                            </td>
                                         </tr>
                                     <?php endforeach ?>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" class="text-right">Grand Total</td>
+                                        <td class="text-right">$ <span id="grandTotal"><?= number_format($grands) ?></span>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
-
                     <?php endif ?>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header bg-success text-white summary-card">
+                        <strong>Order Summary</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="fw-medium">Subtotal: </span>
+                            <strong>$ <span id="sumSubtotal"><?= number_format($grands, 2) ?></span> </strong>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 text-muted align-items-center">
+                            <span>Shipping Charge</span>
+                            <span>Calculated at checkout</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between h5">
+                            <span class="fw-medium">Total: </span>
+                            <Strong>$ <span id="sumGrand"><?= number_format($grands, 2) ?></span> </Strong>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <?php if (!empty($items)): ?>
+                            <form action="cart_order.php" class="mb-2" method="POST">
+                                <button class="btn btn-dark text-white w-100">
+                                    Order
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                        <a href="<?= htmlspecialchars($BASE) ?>/index.php" class="btn btn-outline-success w-100 text-black fw-semibold"> Continue Shopping</a>
+                    </div>
                 </div>
             </div>
         </div>

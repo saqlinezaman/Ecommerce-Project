@@ -26,18 +26,21 @@ $flag = $_GET["msg"] ?? '';
                         <!-- email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Your email</label>
-                            <input type="email" class="form-control" name="email" placeholder="Input your email" required>
+                            <input type="email" class="form-control" name="email" placeholder="Input your email"
+                                required>
                             <div class="invalid-feedback">Email is require</div>
                         </div>
                         <!-- subject -->
                         <div class="mb-3">
                             <label for="subject" class="form-label">Subject</label>
-                            <input type="text" class="form-control" name="subject" placeholder="Input your subject" required>
+                            <input type="text" class="form-control" name="subject" placeholder="Input your subject"
+                                required>
                             <div class="invalid-feedback">Subject is require</div>
                         </div>
                         <!-- message -->
                         <div class="form-floating">
-                            <textarea class="form-control" placeholder="Leave a message here" name="message" style="height: 100px" required></textarea>
+                            <textarea class="form-control" placeholder="Leave a message here" name="message"
+                                style="height: 100px" required></textarea>
                             <label for="floatingTextarea2">Leave message</label>
                             <div class="invalid-feedback">Message can not be empty!</div>
                         </div>
@@ -58,6 +61,15 @@ $flag = $_GET["msg"] ?? '';
                     <p><strong>Email: </strong>dummy@gmail.com</p>
                 </div>
             </div>
+            <div class="card p-1" style="width: 100%; height: 310px; margin-top: 15px;">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d3652.5169553936894!2d90.41202212407582!3d23.72893797868503!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sCogent!5e0!3m2!1sen!2sbd!4v1756560160555!5m2!1sen!2sbd"
+                    style="width: 100%; height: 100%; border:0;" allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+
+            </section>
         </div>
     </div>
 </div>
