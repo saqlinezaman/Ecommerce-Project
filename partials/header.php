@@ -143,7 +143,7 @@ try {
     </div>
      <a class="mx-2 text-black position-relative" style="font-size:20px;" href="<?= $BASE ?>/cart.php">
         <i class="fa-solid fa-cart-shopping text-dark"></i>
-        <span id="navCardCount" class="badge text-bg-danger rounded-pill" style="position: absolute; top: 2px; right: 0%; transform: translate(50%,-50%);
+        <span id="navCartCount" class="badge text-bg-danger rounded-pill" style="position: absolute; top: 2px; right: 0%; transform: translate(50%,-50%);
                font-size: 12px; min-width: 18px; padding: 3px 6px;">
           <?= $cartCount; ?>
         </span>

@@ -95,7 +95,7 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                                         <th class="text-center" style="width: 80px;">Remove</th>
                                     </tr>
                                 </thead>
-                                <tbody class="cart-body">
+                                <tbody id="cart-body">
                                     <?php foreach ($items as $item):
 
                                         $img = (!empty($item['product_image']) && file_exists(__DIR__ . "/admin/uploads" . $item['product_image'])) ? 'admin/uploads/' . $item['product_image'] : 'assets/images/default.jpg';
@@ -103,23 +103,27 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                                         $line = $line = (float) $item['unit_price'] * (int) $item['quantity'];
                                         ?>
                                         <tr class="" data-item-id="<?= (int) $item['id'] ?>">
+                                            <!-- image -->
                                             <td>
                                                 <img src="<?= htmlspecialchars($img) ?>" alt="" class="">
                                             </td>
+                                            <!-- name -->
                                             <td>
                                                 <div class="fw-medium">
                                                     <?= htmlspecialchars($item['product_name']) ?>
                                                 </div>
                                             </td>
+                                            <!-- unit-price -->
                                             <td class="text-right">
-                                                $ <span><?= number_format($item['unit_price'], 2) ?></span>
+                                                $ <span class="unit"><?= number_format($item['unit_price'], 2) ?></span>
                                             </td>
+                                            <!-- quantity -->
                                             <td>
-                                                <input type="number" name="quantity" class="form-control-sm qty" min="1"
+                                                <input type="number"  name="quantity" class="form-control-sm qty" min="1"
                                                     value="<?= htmlspecialchars($item['quantity']) ?>">
                                             </td>
                                             <td class="text-right">
-                                                <span><?= number_format($line, 2) ?><?= number_format($line, 2) ?></span>
+                                                <span class="line-total"><?= number_format($line, 2) ?><?= number_format($line, 2) ?></span>
                                             </td>
                                             <td>
                                                 <button class=""><i class="fa-solid fa-trash text-danger"></i></button>
@@ -145,6 +149,7 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                         <strong>Order Summary</strong>
                     </div>
                     <div class="card-body">
+                        <!-- subtotal -->
                         <div class="d-flex justify-content-between mb-2">
                             <span class="fw-medium">Subtotal: </span>
                             <strong>$ <span id="sumSubtotal"><?= number_format($grands, 2) ?></span> </strong>
@@ -174,8 +179,8 @@ if (file_exists(__DIR__ . '/partials/header.php'))
             </div>
         </div>
     </div>
+    <script src="asset/js/script.js"></script>
 </body>
-
 </html>
 
 <?php

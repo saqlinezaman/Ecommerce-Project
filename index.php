@@ -145,3 +145,4 @@ $cloths = $cloth_statement->fetchAll(PDO::FETCH_ASSOC);
 </main>
 
 <?php include("partials/footer.php"); ?>
+
