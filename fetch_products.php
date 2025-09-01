@@ -34,8 +34,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="d-flex gap-2">
         <?php if (!empty($_SESSION['user_id'])): ?>
           <form action="cart_add.php" method="POST" class="m-0">
-            <input type="hidden" name="product_id" value="<?= $product['id']; ?>">
-            <input type="hidden" name="qty" value="1">
+            <input type="hidden" name="product_id" value="<?=(int) $product['id']; ?>">
             <button type="submit" class="btn btn-dark btn-sm"> <i class="bi bi-cart-plus"></i> Add to Cart</button>
           </form>
         <?php else: ?>

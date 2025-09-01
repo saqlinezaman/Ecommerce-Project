@@ -1,98 +1,81 @@
-// card logic
+// recalculate grand total
 function recalculateTotal() {
   let sum = 0;
-  totalQty = 0;
+  let totalQty = 0;
 
-  document.querySelectorAll("cart-body tr ").forEach(function (tr) {
-
-    const unit = parseFloat(
-      (tr.querySelector(".unit")?.textContent || "0").replace(/,/g, "")
-    );
-
+  // fixed selector with #cart-body
+  document.querySelectorAll("#cart-body tr").forEach(function(tr) {
+    const unit = parseFloat((tr.querySelector(".unit")?.textContent || "0").replace(/,/g, ""));
     let qty = parseInt(tr.querySelector(".qty")?.value || "0", 10) || 0;
-
-    let line = unit * qty ;
-
-    if(!isNaN(line)) sum += line;
+    sum += unit * qty;
     totalQty += qty;
 
+    // update line total in table
+    const lineTotalEl = tr.querySelector(".line-total");
+    if(lineTotalEl) lineTotalEl.textContent = (unit * qty).toFixed(2);
   });
 
   const grandTotal = sum.toFixed(2);
-  const g1 = document.getElementById('grandTotal');
-  const g2 = document.getElementById('sumSubtotal');
-  const g3 = document.getElementById('sumGrand');
 
-  if(g1) g1.textContent = grandTotal;
-  if(g2) g2.textContent = grandTotal;
-  if(g3) g3.textContent = grandTotal;
+  // update totals in summary
+  document.getElementById("grandTotal").textContent = grandTotal;
+  document.getElementById("sumSubtotal").textContent = grandTotal;
+  document.getElementById("sumGrand").textContent = grandTotal;
 
-  if(typeof window.updateNavCartBadge === 'function'){
-    window.updateNavCartBadge(totalQty);
-  }else{
-    var badge = document.getElementById('navCartCount');
-
-    if(badge) badge.textContent = totalQty;
-  }
-
+  // update nav cart badge if exists
+  const badge = document.getElementById("navCartCount");
+  if(badge) badge.textContent = totalQty;
 }
 
-// qty change + ajax update Ui update re Calculation
-
+// quantity input change (Ajax update + UI)
 document.addEventListener('input', function(e){
-    
     const qtyInput = e.target.closest('#cart-body .qty');
-
     if(!qtyInput) return;
 
     const tr = qtyInput.closest('tr');
     const itemId = tr?.getAttribute('data-item-id');
-
     let qty = parseInt(qtyInput.value,10);
-
-    if(!qty && qty < 1) qty = 1;
+    if(!qty || qty < 1) qty = 1;
     qtyInput.value = qty;
     qtyInput.disabled = true;
 
-    fetch('ajax/cart_update_qty.php',{
+    fetch('ajax/cart_update_qty.php', {
         method: "POST",
-        headers: {"Content-Type": "application/x-www.form-urlencode"},
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
         credentials: 'same-origin',
-        body: "item_id"+ encodeURIComponent(itemId)+'&qty'+encodeURIComponent(qty)
-    }).then(r => r.json()).then(d => {
-        const unit = parseFloat((tr.querySelector('.unit')?.textContent || '0').replace(/,/g, ""));
-        tr.querySelector('line-total').textContent = (unit * qty).toFixed(2);
-        recalculateTotal();
-    }).catch(() => {}).finally(() => {qtyInput.disabled = false;}
-   );
-
+        body: "item_id=" + encodeURIComponent(itemId) + "&qty=" + encodeURIComponent(qty)
+    })
+    .then(r => r.json())
+    .then(d => {
+        if(d.ok && d.line_total){
+            tr.querySelector('.line-total').textContent = d.line_total;
+            recalculateTotal();  // update grand total
+        }
+    })
+    .finally(() => { qtyInput.disabled = false; });
 });
 
-// remove item  ajax + ui remove + total
 
+// remove item from cart
 document.addEventListener('click', function(e){
-
-  const btn = e.target.closest('#card-body .remove');
+  const btn = e.target.closest('#cart-body .remove');
   if(!btn) return;
   const tr = btn.closest('tr');
   const itemId = tr?.getAttribute('data-item-id');
 
-  fetch('ajax/cart_remove_item.php',{
-
-    method: 'POST',
-    headers: {"Content-Type": "application/x-www.form-urlencode"},
-    credentials: 'same-origin',
-    body: "item_id"+ encodeURIComponent(itemId)
-  }).then(r => r.json()).then(d => {
-
-    tr.parentNode.removeChild(tr);
-    recalculateTotal();
-
-    if(!document.querySelectorAll('#card-body tr').length){
-      location.reload();
+  fetch('ajax/cart_remove_item.php', {
+    method: "POST",
+    headers: {"Content-Type": "application/x-www-form-urlencoded"},
+    body: "item_id=" + encodeURIComponent(itemId)
+  })
+  .then(r => r.json())
+  .then(d => {
+    if(d.ok){
+      tr.remove();
+      recalculateTotal();
+      if(!document.querySelectorAll('#cart-body tr').length){
+        location.reload();
+      }
     }
-  }).catch(()=> {});
-
+  });
 });
-
-

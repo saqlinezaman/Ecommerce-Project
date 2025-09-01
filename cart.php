@@ -3,6 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// User login check
 if (empty($_SESSION["user_id"])) {
     header("Location: auth/login.php");
     exit;
@@ -14,7 +15,7 @@ require_once __DIR__ . "/config/db_config.php";
 $database = new Database();
 $DB_connection = $database->db_connection();
 
-// make dynamic link for url
+// Base URL
 $BASE = defined('BASE_URL')
     ? BASE_URL
     : ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http')
@@ -23,7 +24,7 @@ $BASE = defined('BASE_URL')
 
 $userId = (int) $_SESSION['user_id'];
 
-// fetch cart id
+// Fetch user's open cart
 $statement = $DB_connection->prepare('SELECT id FROM carts WHERE user_id = ? AND status = "open" LIMIT 1');
 $statement->execute([$userId]);
 $cartId = ($statement->fetch(PDO::FETCH_ASSOC)['id'] ?? null);
@@ -32,6 +33,7 @@ $items = [];
 $grands = 0.00;
 
 if ($cartId) {
+    // Fetch cart items with product info
     $sql = 'SELECT ci.id AS item_id, ci.product_id, ci.quantity, ci.unit_price, 
                   p.product_name, p.product_image
             FROM cart_items ci
@@ -47,7 +49,7 @@ if ($cartId) {
     }
 }
 
-// header include
+// Include header
 if (file_exists(__DIR__ . '/partials/header.php'))
     include __DIR__ . '/partials/header.php';
 ?>
@@ -58,31 +60,27 @@ if (file_exists(__DIR__ . '/partials/header.php'))
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Your Cart</title>
 </head>
 
 <body>
     <div class="container my-3">
         <div class="row">
+            <!-- Cart Items Section -->
             <div class="col-md-8">
                 <div class="card border-none">
-                    <div
-                        class="card-header bg-dark  bg-opacity-70 text-white d-flex justify-content-between align-items-center mb-4 ">
+                    <div class="card-header bg-dark bg-opacity-70 text-white d-flex justify-content-between align-items-center mb-4">
                         <h2>Your cart</h2>
-                        <a href="<?= htmlspecialchars($BASE) ?>/index.php"
-                            class="btn btn-sm btn-light fw-semibold">Continue Shopping</a>
+                        <a href="<?= htmlspecialchars($BASE) ?>/index.php" class="btn btn-sm btn-light fw-semibold">Continue Shopping</a>
                     </div>
-                    <?php
-                    if (empty($items)):
-                        ?>
-                        <div class="cart-body bg-danger  bg-opacity-10 text-center py-4">
+
+                    <?php if (empty($items)): ?>
+                        <div class="cart-body bg-danger bg-opacity-10 text-center py-4">
                             <h5 class="">Your Cart is empty</h5>
-                            <p class="text-muted"> Add some products to see them here</p>
-                            <a href="<?= htmlspecialchars($BASE) ?>/index.php?>"
-                                class="btn btn-success text-white fw-medium">Browse Product</a>
+                            <p class="text-muted">Add some products to see them here</p>
+                            <a href="<?= htmlspecialchars($BASE) ?>/index.php" class="btn btn-success text-white fw-medium">Browse Product</a>
                         </div>
                     <?php else: ?>
-
                         <div class="table-responsive">
                             <table class="table mb-0">
                                 <thead class="thead-light">
@@ -97,45 +95,46 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                                 </thead>
                                 <tbody id="cart-body">
                                     <?php foreach ($items as $item):
+                                        // Fix image path
+                                        $imgPath = __DIR__ . '/admin/uploads/' . $item['product_image'];
+                                        $img = (!empty($item['product_image']) && file_exists($imgPath))
+                                            ? 'admin/uploads/' . $item['product_image']
+                                            : 'assets/images/default.jpg';
 
-                                        $img = (!empty($item['product_image']) && file_exists(__DIR__ . "/admin/uploads" . $item['product_image'])) ? 'admin/uploads/' . $item['product_image'] : 'assets/images/default.jpg';
-
-                                        $line = $line = (float) $item['unit_price'] * (int) $item['quantity'];
-                                        ?>
-                                        <tr class="" data-item-id="<?= (int) $item['id'] ?>">
-                                            <!-- image -->
-                                            <td>
-                                                <img src="<?= htmlspecialchars($img) ?>" alt="" class="">
-                                            </td>
-                                            <!-- name -->
-                                            <td>
-                                                <div class="fw-medium">
-                                                    <?= htmlspecialchars($item['product_name']) ?>
-                                                </div>
-                                            </td>
-                                            <!-- unit-price -->
-                                            <td class="text-right">
-                                                $ <span class="unit"><?= number_format($item['unit_price'], 2) ?></span>
-                                            </td>
-                                            <!-- quantity -->
-                                            <td>
-                                                <input type="number"  name="quantity" class="form-control-sm qty" min="1"
-                                                    value="<?= htmlspecialchars($item['quantity']) ?>">
-                                            </td>
-                                            <td class="text-right">
-                                                <span class="line-total"><?= number_format($line, 2) ?><?= number_format($line, 2) ?></span>
-                                            </td>
-                                            <td>
-                                                <button class="remove"><i class="fa-solid fa-trash text-danger"></i></button>
-                                            </td>
-                                        </tr>
+                                        $line = (float) $item['unit_price'] * (int) $item['quantity'];
+                                    ?>
+                                    <tr data-item-id="<?= (int) $item['item_id'] ?>">
+                                        <!-- Product Image -->
+                                        <td>
+                                            <img src="<?= htmlspecialchars($img) ?>" alt="" class="img-fluid">
+                                        </td>
+                                        <!-- Product Name -->
+                                        <td>
+                                            <div class="fw-medium"><?= htmlspecialchars($item['product_name']) ?></div>
+                                        </td>
+                                        <!-- Unit Price -->
+                                        <td class="text-right">
+                                            $ <span class="unit"><?= number_format($item['unit_price'], 2) ?></span>
+                                        </td>
+                                        <!-- Quantity Input -->
+                                        <td>
+                                            <input type="number" name="quantity" class="form-control-sm qty" min="1" value="<?= htmlspecialchars($item['quantity']) ?>">
+                                        </td>
+                                        <!-- Line Total -->
+                                        <td class="text-right">
+                                            <span class="line-total"><?= number_format($line, 2) ?></span>
+                                        </td>
+                                        <!-- Remove Button -->
+                                        <td class="text-center">
+                                            <button class="remove"><i class="fa-solid fa-trash text-danger"></i></button>
+                                        </td>
+                                    </tr>
                                     <?php endforeach ?>
                                 </tbody>
                                 <tfoot>
                                     <tr>
                                         <td colspan="4" class="text-right">Grand Total</td>
-                                        <td class="text-right">$ <span id="grandTotal"><?= number_format($grands) ?></span>
-                                        </td>
+                                        <td class="text-right">$ <span id="grandTotal"><?= number_format($grands, 2) ?></span></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -143,16 +142,17 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                     <?php endif ?>
                 </div>
             </div>
+
+            <!-- Order Summary Section -->
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-header bg-success text-white summary-card">
                         <strong>Order Summary</strong>
                     </div>
                     <div class="card-body">
-                        <!-- subtotal -->
                         <div class="d-flex justify-content-between mb-2">
                             <span class="fw-medium">Subtotal: </span>
-                            <strong>$ <span id="sumSubtotal"><?= number_format($grands, 2) ?></span> </strong>
+                            <strong>$ <span id="sumSubtotal"><?= number_format($grands, 2) ?></span></strong>
                         </div>
                         <div class="d-flex justify-content-between mb-2 text-muted align-items-center">
                             <span>Shipping Charge</span>
@@ -161,30 +161,29 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                         <hr>
                         <div class="d-flex justify-content-between h5">
                             <span class="fw-medium">Total: </span>
-                            <Strong>$ <span id="sumGrand"><?= number_format($grands, 2) ?></span> </Strong>
+                            <strong>$ <span id="sumGrand"><?= number_format($grands, 2) ?></span></strong>
                         </div>
-
                     </div>
                     <div class="card-footer">
                         <?php if (!empty($items)): ?>
                             <form action="cart_order.php" class="mb-2" method="POST">
-                                <button class="btn btn-dark text-white w-100">
-                                    Order
-                                </button>
+                                <button class="btn btn-dark text-white w-100">Order</button>
                             </form>
                         <?php endif; ?>
-                        <a href="<?= htmlspecialchars($BASE) ?>/index.php" class="btn btn-outline-success w-100 text-black fw-semibold"> Continue Shopping</a>
+                        <a href="<?= htmlspecialchars($BASE) ?>/index.php" class="btn btn-outline-success w-100 text-black fw-semibold">Continue Shopping</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Include JS -->
     <script src="asset/js/script.js"></script>
 </body>
 </html>
 
 <?php
-// footer include
+// Include footer
 if (file_exists(__DIR__ . '/partials/footer.php'))
     include __DIR__ . '/partials/footer.php';
 ?>
