@@ -126,7 +126,7 @@ if (file_exists(__DIR__ . '/partials/header.php'))
                                                 <span class="line-total"><?= number_format($line, 2) ?><?= number_format($line, 2) ?></span>
                                             </td>
                                             <td>
-                                                <button class=""><i class="fa-solid fa-trash text-danger"></i></button>
+                                                <button class="remove"><i class="fa-solid fa-trash text-danger"></i></button>
                                             </td>
                                         </tr>
                                     <?php endforeach ?>

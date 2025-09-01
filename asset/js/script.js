@@ -63,7 +63,35 @@ document.addEventListener('input', function(e){
         const unit = parseFloat((tr.querySelector('.unit')?.textContent || '0').replace(/,/g, ""));
         tr.querySelector('line-total').textContent = (unit * qty).toFixed(2);
         recalculateTotal();
-    }).catch(() => {}).finally(() => {qtyInput.disabled = false;} );
+    }).catch(() => {}).finally(() => {qtyInput.disabled = false;}
+   );
+
+});
+
+// remove item  ajax + ui remove + total
+
+document.addEventListener('click', function(e){
+
+  const btn = e.target.closest('#card-body .remove');
+  if(!btn) return;
+  const tr = btn.closest('tr');
+  const itemId = tr?.getAttribute('data-item-id');
+
+  fetch('ajax/cart_remove_item.php',{
+
+    method: 'POST',
+    headers: {"Content-Type": "application/x-www.form-urlencode"},
+    credentials: 'same-origin',
+    body: "item_id"+ encodeURIComponent(itemId)
+  }).then(r => r.json()).then(d => {
+
+    tr.parentNode.removeChild(tr);
+    recalculateTotal();
+
+    if(!document.querySelectorAll('#card-body tr').length){
+      location.reload();
+    }
+  }).catch(()=> {});
 
 });
 
